@@ -28,5 +28,11 @@
     "reviewer": true,
     "merger": true,
     "expertise": ["nengo"]
+  },
+  {
+    "name": "Brent Komer",
+    "reviewer": true,
+    "merger": false,
+    "expertise": ["nengo"]
   }
 ]
