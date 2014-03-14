@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Trevor Bekolay",
+    "reviewer": true,
+    "merger": true,
+    "expertise": ["nengo"]
+  },
+  {
+    "name": "Eric Hunsberger",
+    "reviewer": true,
+    "merger": true,
+    "expertise": ["nengo", "nengo_ocl"]
+  },
+  {
+    "name": "Aaron Voelker",
+    "reviewer": true,
+    "merger": false,
+    "expertise": ["nengo", "nengo_gui"]
+  },
+  {
+    "name": "Terry Stewart",
+    "reviewer": true,
+    "merger": false,
+    "expertise": ["nengo", "nengo_gui"]
+  }
+]

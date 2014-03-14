@@ -1,0 +1,43 @@
+.TH CHOOSE 1
+.SH NAME
+choose \- choose someone to do a code review or merge a pull request
+.SH SYNOPSIS
+.B choose
+(\fBmerger\fR|\fBreviewer\fR)
+[\fIproject\fR]
+[\fB\-\-noob\fR]
+.SH DESCRIPTION
+.B choose
+chooses someone to do a code review or merge a pull request.
+It reads the file \fIcontributors.json\fR in order to
+determine who has the right expertise (or lack thereof).
+.PP
+If the person chosen by the script cannot do
+the review or merge, or if they are already involved in the PR,
+rerun the script until you get someone eligible.
+.SH OPTIONS
+.TP
+.I project
+The project for which to choose a reviewer or merger.
+Defaults to nengo.
+.TP
+.B \-\-noob
+Pass this if you want a reviewer or merger
+without expertise in the project.
+Otherwise, you will get someone with expertise.
+.SH EXAMPLES
+To find a merger among nengo experts:
+.PP
+.nf
+.RS
+choose merger
+.RE
+.fi
+.PP
+To find a reviewer among nengo_ocl non-experts:
+.PP
+.nf
+.RS
+choose reviewer nengo_ocl --noob
+.RE
+.fi

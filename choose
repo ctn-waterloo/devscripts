@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+"""Usage: choose (merger|reviewer) [project] [--noob]
+
+Project defaults to nengo.
+
+Examples
+--------
+choose merger
+    Chooses a merger among nengo experts.
+choose reviewer nengo_ocl --noob
+    Chooses a reviewer among nengo_ocl non-experts.
+
+See man choose for more information.
+"""
+
+import json
+import os.path
+import random
+import sys
+
+
+if __name__ != '__main__':
+    raise ImportError("Don't import me, bro!")
+
+
+# Process command line args
+args = sys.argv[1:]
+roles = ["merger", "reviewer"]
+projects = ["nengo", "nengo_gui", "nengo_ocl"]
+
+# Read and strip '--noob'
+expert = not '--noob' in args
+try:
+    args.remove('--noob')
+except ValueError:
+    pass
+
+if len(args) == 0 or not args[0] in roles:
+    sys.exit(__doc__)
+
+role = args[0]
+project = "nengo" if len(args) == 1 else args[1]
+
+if project not in projects:
+    print("%s not recognized. Including all contributors." % project)
+    project = None
+
+# Read contributors.json into a list
+contrib_f = os.path.join(os.path.dirname(__file__), "contributors.json")
+with open(contrib_f, 'r') as fp:
+    contribs = json.load(fp)
+
+# Filter list based on expertise
+if project is not None:
+    contribs = [contrib for contrib in contribs
+                if (project in contrib["expertise"]) == expert]
+
+# Can we choose someone?
+if len(contribs) == 0:
+    print("Sorry, no one meets that description! Relax your requirements.")
+else:
+    # Choose someone!
+    contrib = random.choice(contribs)
+    print("The lucky %s is %s!\nIf that doesn't work, run this again." % (
+        role, contrib["name"]))
