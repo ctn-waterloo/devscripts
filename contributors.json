@@ -22,5 +22,11 @@
     "reviewer": true,
     "merger": false,
     "expertise": ["nengo", "nengo_gui"]
+  },
+  {
+    "name": "Daniel Rasmussen",
+    "reviewer": true,
+    "merger": true,
+    "expertise": ["nengo"]
   }
 ]
