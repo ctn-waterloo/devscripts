@@ -6,6 +6,7 @@ choose \- choose someone to do a code review or merge a pull request
 (\fBmerger\fR|\fBreviewer\fR)
 [\fIproject\fR]
 [\fB\-\-noob\fR]
+[\fB\-\-not\fR EXCLUDE [EXCLUDE ...]]
 .SH DESCRIPTION
 .B choose
 chooses someone to do a code review or merge a pull request.
@@ -25,6 +26,10 @@ Defaults to nengo.
 Pass this if you want a reviewer or merger
 without expertise in the project.
 Otherwise, you will get someone with expertise.
+.TP
+.B \-\-not \fR EXCLUDE [EXCLUDE ...]
+Exclude the given names from the selection. Names can be any part of the
+developer's name, matched in lower case.
 .SH EXAMPLES
 To find a merger among nengo experts:
 .PP

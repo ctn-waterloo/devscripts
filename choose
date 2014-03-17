@@ -13,6 +13,7 @@ choose reviewer nengo_ocl --noob
 See man choose for more information.
 """
 
+import argparse
 import json
 import os.path
 import random
@@ -23,23 +24,24 @@ if __name__ != '__main__':
     raise ImportError("Don't import me, bro!")
 
 
-# Process command line args
-args = sys.argv[1:]
 roles = ["merger", "reviewer"]
 projects = ["nengo", "nengo_gui", "nengo_ocl"]
 
-# Read and strip '--noob'
-expert = not '--noob' in args
-try:
-    args.remove('--noob')
-except ValueError:
-    pass
+# Process command line args
+parser = argparse.ArgumentParser()
+parser.add_argument('role', type=str)
+parser.add_argument('project', type=str, nargs='?', default="nengo")
+parser.add_argument('--noob', dest='expert', action='store_const',
+                    const=False, default=True)
+parser.add_argument('--not', dest='exclude', nargs='+', default=[])
+args = parser.parse_args()
 
-if len(args) == 0 or not args[0] in roles:
+role = args.role
+project = args.project
+expert = args.expert
+
+if role not in roles:
     sys.exit(__doc__)
-
-role = args[0]
-project = "nengo" if len(args) == 1 else args[1]
 
 if project not in projects:
     print("%s not recognized. Including all contributors." % project)
@@ -50,10 +52,14 @@ contrib_f = os.path.join(os.path.dirname(__file__), "contributors.json")
 with open(contrib_f, 'r') as fp:
     contribs = json.load(fp)
 
-# Filter list based on expertise
-if project is not None:
+# Filter list based on role and expertise
+contribs = [contrib for contrib in contribs
+            if contrib[role] and (project in contrib["expertise"]) == expert]
+
+# Exclude any specified names
+for name in args.exclude:
     contribs = [contrib for contrib in contribs
-                if (project in contrib["expertise"]) == expert]
+                if name not in contrib["name"].lower()]
 
 # Can we choose someone?
 if len(contribs) == 0:
