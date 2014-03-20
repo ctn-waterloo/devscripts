@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Usage: choose (merger|reviewer) [project] [--noob]
+"""Usage: choose (merger|reviewer) [PROJECT] [--noob] [--not NAME...]
 
 Project defaults to nengo.
 

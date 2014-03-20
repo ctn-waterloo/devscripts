@@ -4,9 +4,9 @@ choose \- choose someone to do a code review or merge a pull request
 .SH SYNOPSIS
 .B choose
 (\fBmerger\fR|\fBreviewer\fR)
-[\fIproject\fR]
+[\fIPROJECT\fR]
 [\fB\-\-noob\fR]
-[\fB\-\-not\fR EXCLUDE [EXCLUDE ...]]
+[\fB\-\-not\fR \fINAME\fR...]
 .SH DESCRIPTION
 .B choose
 chooses someone to do a code review or merge a pull request.
@@ -18,7 +18,7 @@ the review or merge, or if they are already involved in the PR,
 rerun the script until you get someone eligible.
 .SH OPTIONS
 .TP
-.I project
+.I PROJECT
 The project for which to choose a reviewer or merger.
 Defaults to nengo.
 .TP
@@ -27,9 +27,9 @@ Pass this if you want a reviewer or merger
 without expertise in the project.
 Otherwise, you will get someone with expertise.
 .TP
-.B \-\-not \fR EXCLUDE [EXCLUDE ...]
-Exclude the given names from the selection. Names can be any part of the
-developer's name, matched in lower case.
+.B \-\-not \fINAME\fR...
+Exclude the given names from the selection.
+Names can be any part of the developer's name, matched in lower case.
 .SH EXAMPLES
 To find a merger among nengo experts:
 .PP
@@ -44,5 +44,13 @@ To find a reviewer among nengo_ocl non-experts:
 .nf
 .RS
 choose reviewer nengo_ocl --noob
+.RE
+.fi
+.PP
+To find a merger that isn't Bob:
+.PP
+.nf
+.RS
+choose merger --not bob
 .RE
 .fi
