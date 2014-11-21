@@ -20,4 +20,5 @@ if __name__ == '__main__':
     remove_outputs(nb)
     with io.open(fname, 'w', encoding='utf8') as f:
         write(nb, f, 'json')
+        f.write(u'\n')
     print "wrote %s" % fname
