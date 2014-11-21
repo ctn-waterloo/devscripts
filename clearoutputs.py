@@ -11,6 +11,8 @@ def remove_outputs(nb):
         for cell in ws.cells:
             if cell.cell_type == 'code':
                 cell.outputs = []
+                if 'prompt_number' in cell:
+                    del cell['prompt_number']
 
 
 if __name__ == '__main__':
