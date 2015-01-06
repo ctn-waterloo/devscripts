@@ -30,11 +30,17 @@ def remove_outputs(nb):
 
 
 if __name__ == '__main__':
-    fname = sys.argv[1]
-    with io.open(fname, 'r') as f:
-        nb = read(f, 'json')
-    remove_outputs(nb)
-    with io.open(fname, 'w', encoding='utf8') as f:
-        write(nb, f, 'json')
-        f.write(u'\n')
-    print("wrote %s" % fname)
+    fnames = sys.argv[1:]
+
+    for fname in fnames:
+        try:
+            with io.open(fname, 'r') as f:
+                nb = read(f, 'json')
+            remove_outputs(nb)
+            with io.open(fname, 'w', encoding='utf8') as f:
+                write(nb, f, 'json')
+                f.write(u'\n')
+            print("wrote %s" % fname)
+        except Exception as e:
+            print("Skipping '%s' due to %s:\n  %s"
+                  % (fname, e.__class__.__name__, e))
