@@ -4,6 +4,7 @@ from __future__ import print_function
 import argparse
 import io
 import os
+import sys
 
 from nengo.utils.ipython import read_nb, write_nb
 
@@ -71,8 +72,15 @@ if __name__ == '__main__':
         '--target-version', type=int, default=3,
         help="Version of notebook format to save.")
     parser.add_argument(
-        'fnames', nargs='+',
-        help="Files to process. Will recursively descend into directories")
+        'fnames', nargs='*',
+        help="Files to process. Will recursively descend into directories. "
+        "If not provided, notebook will be read from stdin and written to "
+        "stdout.")
     args = parser.parse_args()
 
-    clear_files(args.fnames, target_version=args.target_version)
+    if len(args.fnames) > 0:
+        clear_files(args.fnames, target_version=args.target_version)
+    else:
+        nb = read_nb(sys.stdin)
+        remove_outputs(nb)
+        write_nb(nb, sys.stdout, version=args.target_version)
