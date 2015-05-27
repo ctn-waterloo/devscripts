@@ -9,3 +9,5 @@ Currently, this repository contains
 - `choose` -- chooses a code reviewer or pull request
   from a list of people defined in `contributors.json`
     - See `man ./choose.1` for more usage information
+- `vagrant` -- Easy testing in windows environments. See `README.md` in that
+  directory for more information.
