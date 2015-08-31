@@ -39,7 +39,6 @@ if __name__ == '__main__':
             remove_outputs(nb)
             with io.open(fname, 'w', encoding='utf8') as f:
                 write(nb, f, 'json')
-                f.write(u'\n')
             print("wrote %s" % fname)
         except Exception as e:
             print("Skipping '%s' due to %s:\n  %s"
