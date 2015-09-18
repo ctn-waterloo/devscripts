@@ -9,6 +9,10 @@ from IPython.nbformat.current import read, write
 
 def remove_outputs(nb):
     """remove the outputs from a notebook"""
+
+    if 'signature' in nb.metadata:
+        del nb.metadata['signature']
+
     for ws in nb.worksheets:
         empty = []  # empty cells
 
