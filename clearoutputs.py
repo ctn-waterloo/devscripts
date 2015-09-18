@@ -29,17 +29,36 @@ def remove_outputs(nb):
             ws.cells.remove(cell)
 
 
+def clear_file(fname):
+    try:
+        with io.open(fname, 'r') as f:
+            nb = read(f, 'json')
+        remove_outputs(nb)
+        with io.open(fname, 'w', encoding='utf8') as f:
+            write(nb, f, 'json')
+        print("wrote %s" % fname)
+    except Exception as e:
+        print("Skipping '%s' due to %s:\n  %s"
+              % (fname, e.__class__.__name__, e))
+
+
+def clear_files(fnames):
+    for fname in fnames:
+        if os.path.isdir(fname):
+            clear_directory(fname)
+        else:
+            clear_file(fname)
+
+
+def clear_directory(dname):
+    assert os.path.isdir(dname)
+    fnames = os.listdir(dname)
+    fpaths = [os.path.join(dname, fname) for fname in fnames
+              if not fname.startswith('.')]
+    clear_files([fpath for fpath in fpaths
+                 if os.path.isdir(fpath) or fpath.endswith('.ipynb')])
+
+
 if __name__ == '__main__':
     fnames = sys.argv[1:]
-
-    for fname in fnames:
-        try:
-            with io.open(fname, 'r') as f:
-                nb = read(f, 'json')
-            remove_outputs(nb)
-            with io.open(fname, 'w', encoding='utf8') as f:
-                write(nb, f, 'json')
-            print("wrote %s" % fname)
-        except Exception as e:
-            print("Skipping '%s' due to %s:\n  %s"
-                  % (fname, e.__class__.__name__, e))
+    clear_files(fnames)
