@@ -33,7 +33,7 @@ Windows folder somewhere in the filesystem). To resync after boot up use
 
 ## Environment
 
-The virtual machine has Python versions 2.6, 2.7, 3.3, and 3.4 installed. None
+The virtual machine has Python versions 2.7, 3.4, and 3.5 installed. None
 of them is in the path, thus you have to use full paths. Note that there is
 also a Python install by Cygwin which might be in the path. **Avoid** using it.
 It allows for some things (e.g. `os.statvfs`) which usually are not support by
