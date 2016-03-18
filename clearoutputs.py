@@ -4,7 +4,7 @@ from __future__ import print_function
 import sys
 import io
 import os
-from IPython.nbformat.current import read, write
+from nengo.utils.ipython import read_nb, write_nb
 
 
 def remove_outputs(nb):
@@ -36,10 +36,11 @@ def remove_outputs(nb):
 def clear_file(fname):
     try:
         with io.open(fname, 'r') as f:
-            nb = read(f, 'json')
+            nb = read_nb(f)
         remove_outputs(nb)
         with io.open(fname, 'w', encoding='utf8') as f:
-            write(nb, f, 'json')
+            write_nb(nb, f, 'json')
+            f.write(u'\n')
         print("wrote %s" % fname)
     except Exception as e:
         print("Skipping '%s' due to %s:\n  %s"
