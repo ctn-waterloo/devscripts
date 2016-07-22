@@ -13,12 +13,14 @@ def remove_outputs(nb):
     if 'signature' in nb.metadata:
         del nb.metadata['signature']
 
-    for ws in nb.worksheets:
+    worksheets = nb.worksheets if hasattr(nb, 'worksheets') else [nb]
+    for ws in worksheets:
         empty = []  # empty cells
 
         for cell in ws.cells:
             if cell.cell_type == 'code':
-                if len(cell.input) == 0:
+                source = cell.input if hasattr(cell, 'input') else cell.source
+                if len(source) == 0:
                     empty.append(cell)
                 else:
                     cell.outputs = []
@@ -39,7 +41,7 @@ def clear_file(fname):
             nb = read_nb(f)
         remove_outputs(nb)
         with io.open(fname, 'w', encoding='utf8') as f:
-            write_nb(nb, f, 'json')
+            write_nb(nb, f)
             f.write(u'\n')
         print("wrote %s" % fname)
     except Exception as e:
