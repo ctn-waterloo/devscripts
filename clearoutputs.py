@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
-import sys
 import io
 import os
+import sys
+
 from nengo.utils.ipython import read_nb, write_nb
 
 
@@ -35,37 +36,34 @@ def remove_outputs(nb):
             ws.cells.remove(cell)
 
 
-def clear_file(fname):
-    try:
-        with io.open(fname, 'r') as f:
-            nb = read_nb(f)
-        remove_outputs(nb)
-        with io.open(fname, 'w', encoding='utf8') as f:
-            write_nb(nb, f)
-            f.write(u'\n')
-        print("wrote %s" % fname)
-    except Exception as e:
-        print("Skipping '%s' due to %s:\n  %s"
-              % (fname, e.__class__.__name__, e))
+def clear_file(fname, target_version):
+    with io.open(fname, 'r') as f:
+        nb = read_nb(f)
+    remove_outputs(nb)
+    with io.open(fname, 'w', encoding='utf8') as f:
+        write_nb(nb, f, version=target_version)
+        f.write(u'\n')
+    print("wrote %s" % fname)
 
 
-def clear_files(fnames):
+def clear_files(fnames, target_version):
     for fname in fnames:
         if os.path.isdir(fname):
-            clear_directory(fname)
+            clear_directory(fname, target_version=target_version)
         else:
-            clear_file(fname)
+            clear_file(fname, target_version=target_version)
 
 
-def clear_directory(dname):
+def clear_directory(dname, target_version):
     assert os.path.isdir(dname)
     fnames = os.listdir(dname)
     fpaths = [os.path.join(dname, fname) for fname in fnames
               if not fname.startswith('.')]
     clear_files([fpath for fpath in fpaths
-                 if os.path.isdir(fpath) or fpath.endswith('.ipynb')])
+                 if os.path.isdir(fpath) or fpath.endswith('.ipynb')],
+                target_version=target_version)
 
 
 if __name__ == '__main__':
     fnames = sys.argv[1:]
-    clear_files(fnames)
+    clear_files(fnames, target_version=3)
