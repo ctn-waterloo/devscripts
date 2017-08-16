@@ -15,6 +15,11 @@ def remove_outputs(nb):
     if 'signature' in nb.metadata:
         del nb.metadata['signature']
 
+    nb.metadata['language_info'] = {
+        'name': 'python',
+        'pygments_lexer': 'ipython3'
+    }
+
     worksheets = nb.worksheets if hasattr(nb, 'worksheets') else [nb]
     for ws in worksheets:
         empty = []  # empty cells
