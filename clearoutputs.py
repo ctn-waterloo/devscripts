@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
+import argparse
 import io
 import os
-import sys
 
 from nengo.utils.ipython import read_nb, write_nb
 
@@ -65,5 +65,14 @@ def clear_directory(dname, target_version):
 
 
 if __name__ == '__main__':
-    fnames = sys.argv[1:]
-    clear_files(fnames, target_version=3)
+    parser = argparse.ArgumentParser(
+        description="Clear all outputs in Jupyter notebooks.")
+    parser.add_argument(
+        '--target-version', type=int, default=3,
+        help="Version of notebook format to save.")
+    parser.add_argument(
+        'fnames', nargs='+',
+        help="Files to process. Will recursively descend into directories")
+    args = parser.parse_args()
+
+    clear_files(args.fnames, target_version=args.target_version)
