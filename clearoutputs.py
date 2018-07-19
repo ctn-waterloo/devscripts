@@ -74,7 +74,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="Clear all outputs in Jupyter notebooks.")
     parser.add_argument(
-        '--target-version', type=int, default=3,
+        '--target-version', type=int, default=4,
         help="Version of notebook format to save.")
     parser.add_argument(
         'fnames', nargs='*',
