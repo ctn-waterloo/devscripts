@@ -6,7 +6,8 @@ import io
 import os
 import sys
 
-from nengo.utils.ipython import read_nb, write_nb
+import nbformat
+from nbformat import write as write_nb
 
 
 def remove_outputs(nb):
@@ -14,6 +15,9 @@ def remove_outputs(nb):
 
     if 'signature' in nb.metadata:
         del nb.metadata['signature']
+
+    if 'kernelspec' in nb.metadata:
+        del nb.metadata['kernelspec']
 
     nb.metadata['language_info'] = {
         'name': 'python',
@@ -25,30 +29,48 @@ def remove_outputs(nb):
         empty = []  # empty cells
 
         for cell in ws.cells:
+            source = (getattr(cell, 'input', cell.source)
+                      if cell.cell_type == 'code'
+                      else getattr(cell, 'source', []))
+            if len(source) == 0:
+                empty.append(cell)
+                continue
+
             if cell.cell_type == 'code':
-                source = cell.input if hasattr(cell, 'input') else cell.source
-                if len(source) == 0:
-                    empty.append(cell)
-                else:
-                    cell.outputs = []
-                    if 'prompt_number' in cell:
-                        del cell['prompt_number']
-            else:
-                if 'source' in cell and len(cell.source) == 0:
-                    empty.append(cell)
+                cell.outputs = []
+                if 'prompt_number' in cell:
+                    del cell['prompt_number']
+                if 'execution_count' in cell:
+                    cell['execution_count'] = None
+
+                # clear non-useful metadata
+                clear_cell_metadata_entry(cell, 'collapsed')
+                clear_cell_metadata_entry(cell, 'deletable', value=True)
+                clear_cell_metadata_entry(cell, 'editable', value=True)
+
+            elif cell.cell_type == 'markdown':
+                # clear non-useful metadata
+                clear_cell_metadata_entry(cell, 'deletable', value=True)
+                clear_cell_metadata_entry(cell, 'editable', value=True)
 
         # remove empty cells
         for cell in empty:
             ws.cells.remove(cell)
 
 
+def clear_cell_metadata_entry(cell, key, value='_ANY_'):
+    metadata = cell['metadata']
+    if key in metadata and (value is '_ANY_' or metadata[key] == value):
+        del metadata[key]
+
+
 def clear_file(fname, target_version):
-    with io.open(fname, 'r') as f:
-        nb = read_nb(f)
+    with io.open(fname, 'r', encoding='utf-8') as f:
+        nb = nbformat.read(f, as_version=4)
     remove_outputs(nb)
-    with io.open(fname, 'w', encoding='utf8') as f:
+    with io.open(fname, 'w', encoding='utf-8') as f:
         write_nb(nb, f, version=target_version)
-        f.write(u'\n')
+        # f.write(u'\n')
     print("wrote %s" % fname)
 
 
@@ -74,7 +96,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="Clear all outputs in Jupyter notebooks.")
     parser.add_argument(
-        '--target-version', type=int, default=3,
+        '--target-version', type=int, default=4,
         help="Version of notebook format to save.")
     parser.add_argument(
         'fnames', nargs='*',
